@@ -12,14 +12,17 @@ cat ./-
 ```
 
 ## Level 2 → Level 3
-I had to figure out how to open a dashed and spaced file name, I figured it out by using this command: 
+For level 2, my goal was to cat a dashed and spaced file name, i figured how to cat it using the command:
 
 ```bash
 cat -- "filename"
 ```
 
 ## Level 3 → Level 4
-I had to figure out how to find the hidden file, to do that I used the command: `ls -a`  
+For level 3 I needed to figure out how to find the hidden file, after doing `ls` and seeing nothing ,I used the command:
+
+`ls -a`  
+
 After finding the file, I noticed its name contained dots and dashes, so to cat the file, I used the command: 
 
 ```bash
@@ -27,13 +30,14 @@ cat -- "...File-name"
 ```
 
 ## Level 4 → Level 5
-The password was hidden among several files, where most files contained binary data. I used the find command with the file command:  
+For level 4, The password was hidden among several files, where most files contained binary data. I used the find command with the file command:  
 
 ```bash
 find . -type f -exec file {} +  
 ```
 
 to identify the file containing human-readable text, after finding the file i used `cat` to reveal the password.
+
 
 ## Level 5 → Level 6
 For this level, I was given three properties of the password file: it had to be human-readable, exactly 1033 bytes in size, and not executable. 
@@ -52,6 +56,7 @@ cat ./maybehere07/.file2
 
 to finally get the password for the next level. 
 
+
 ## Level 6 → Level 7 
 For this level, I was given three properties: the file was owned by user bandit7, owned by group bandit6, and was 33 bytes in size. The password was also in an unknown place somewhere on the server. 
 
@@ -68,6 +73,7 @@ cat /var/lib/dpkg/info/bandit7.password
 ```
 
 to get the password itself for level 7.
+
 
 ## Level 7 → Level 8
 for this level the password was stored in a large list containing many word-password pairs, it was a random word and a random password next to it but the password i was looking for was next to the word "millionth"
