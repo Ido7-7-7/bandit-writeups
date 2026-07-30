@@ -164,6 +164,7 @@ The command I used was:
 openssl s_client -quiet -connect localhost:30001
 ```
 
+
 ## level 16 -> level 17
 
 For this level, the challenge required finding the correct port between `31000` and `32000` that was running an SSL/TLS service and submitting the current level's password to it. Before starting, I researched the suggested commands again to refresh my understanding of how they worked.
