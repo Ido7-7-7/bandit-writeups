@@ -4,6 +4,10 @@ My solutions and write-ups for the OverTheWire Bandit wargame (levels 0–33).
 ## Level 0 → Level 1
 To solve Level 0, I connected to the server using SSH. After logging in, I searched for the readme file using `ls` and read its contents with `cat`. I found the password inside the file, which i used for the next level.
 
+```bash
+ssh bandit1@bandit.labs.overthewire.org -p 2220
+```
+
 ## Level 1 → Level 2
 I had to figure out how to open a file named "-", which I figured out by searching what is a dashed file name and using the command:  
 
