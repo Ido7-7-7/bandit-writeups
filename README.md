@@ -163,3 +163,45 @@ The command I used was:
 ```bash
 openssl s_client -quiet -connect localhost:30001
 ```
+
+## level 16 -> level 17
+
+For this level, the challenge required finding the correct port between `31000` and `32000` that was running an SSL/TLS service and submitting the current level's password to it. Before starting, I researched the suggested commands again to refresh my understanding of how they worked.
+
+Since the challenge required finding a specific port in a range, I used an `nmap` scan on `localhost`:
+
+```bash
+nmap localhost -p 31000-32000
+```
+
+The scan showed five open ports, so I tested each one using:
+
+```bash
+openssl s_client -connect localhost:<port>
+```
+
+Some of the ports failed to establish an SSL/TLS connection. Two of the ports accepted the SSL/TLS connection, but when I sent the current password, both returned a `KEYUPDATE` message.
+
+To figure out which one was the correct service, I tested both connections further. On one of them, when I sent random text, the same text was returned back to me, showing that it was not the service I was looking for. On the other port, I received the message:
+
+```text
+Wrong! Please enter the correct current password.
+```
+
+This showed me that I had found the correct port because the service was actually checking the password, but there was still an issue with how the SSL/TLS connection was handling the exchange.
+
+To troubleshoot this, I researched the `openssl s_client` documentation using:
+
+```bash
+man openssl-s_client
+```
+
+From the manual, I learned about the `-ign_eof` option, which keeps the TLS session open after receiving an EOF signal. I realized that this was needed to keep the connection active long enough for the password exchange to complete.
+
+I then used:
+
+```bash
+openssl s_client -connect localhost:<port> -ign_eof
+```
+
+After sending the correct password, the service returned a private SSH key instead of a normal password. This key was required for the next level.
