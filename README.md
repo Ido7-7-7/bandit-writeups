@@ -9,21 +9,21 @@ ssh bandit1@bandit.labs.overthewire.org -p 2220
 ```
 
 ## Level 1 → Level 2
-I had to figure out how to open a file named "-", which I figured out by searching what is a dashed file name and using the command:  
+For Level 1, I had to figure out how to open a file named `-`. I solved it by researching how dashed filenames work and then using the following command:
 
 ```bash
 cat ./-
 ```
 
 ## Level 2 → Level 3
-For level 2, my goal was to cat a dashed and spaced file name, i figured how to cat it using the command:
+For Level 2, the challenge was to read a file with both a dash and spaces in its name. After researching how to handle filenames like this, I used the following command:
 
 ```bash
 cat -- "filename"
 ```
 
 ## Level 3 → Level 4
-For level 3 I needed to figure out how to find the hidden file, after doing `ls` and seeing nothing ,I used the command:
+For Level 3, I needed to figure out how to find the hidden file. After running `ls` and seeing nothing, I used the following command:
 
 `ls -a`  
 
