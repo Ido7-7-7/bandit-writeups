@@ -206,3 +206,23 @@ openssl s_client -connect localhost:<port> -ign_eof
 ```
 
 After sending the correct password, the service returned a private SSH key instead of a normal password. This key was required for the next level.
+
+
+## Level 17 → Level 18
+
+For this level, the challenge required finding the only line that was different between `passwords.old` and `passwords.new`. Before starting, I researched the suggested commands from the level description and learned that `diff` was the correct tool for comparing the two files.
+
+Since I had received an SSH key from the previous level, I first retrieved the current level's password from:
+
+```bash
+/etc/bandit_pass/bandit17
+```
+
+After that, I used `diff` to compare the two files:
+
+```bash
+diff passwords.old passwords.new
+```
+
+The command displayed the only changed line between the files, which contained the password for Level 18.
+
