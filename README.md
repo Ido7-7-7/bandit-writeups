@@ -226,3 +226,33 @@ diff passwords.old passwords.new
 
 The command displayed the only changed line between the files, which contained the password for Level 18.
 
+
+## Level 18 → Level 19
+
+For this level, the challenge required reading the password stored in the `readme` file located in the home directory. However, the `.bashrc` file had been modified to automatically log me out when connecting through SSH.
+
+At first, I tried troubleshooting the SSH connection using the verbose flag:
+
+```bash
+ssh bandit18@bandit.labs.overthewire.org -p 2220 -vvv
+```
+
+However, this did not provide any useful information. I then researched how `.bashrc` is executed during SSH logins and learned that instead of opening an interactive shell, I could execute commands directly through SSH.
+
+After looking into SSH command execution, I tested running commands remotely by adding the command at the end of the SSH connection:
+
+```bash
+ssh bandit18@bandit.labs.overthewire.org -p 2220 "ls"
+```
+
+This displayed the contents of the home directory and showed that a `readme` file existed. I then used:
+
+```bash
+ssh bandit18@bandit.labs.overthewire.org -p 2220 "cat readme"
+```
+
+The command displayed the password for the next level, allowing me to continue to Level 19.
+
+
+
+
