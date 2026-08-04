@@ -254,6 +254,7 @@ ssh bandit18@bandit.labs.overthewire.org -p 2220 "cat readme"
 The command displayed the password for the next level, allowing me to continue to Level 19.
 
 
+
 ## Level 19 → Level 20
 
 For this level, the challenge required using a SetUID binary located in the home directory to access the password for the next level.
