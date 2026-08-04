@@ -254,5 +254,74 @@ ssh bandit18@bandit.labs.overthewire.org -p 2220 "cat readme"
 The command displayed the password for the next level, allowing me to continue to Level 19.
 
 
+## Level 19 → Level 20
+
+For this level, the challenge required using a SetUID binary located in the home directory to access the password for the next level.
+
+After logging in, I searched the directory and found an executable called:
+
+```bash
+bandit20-do
+```
+
+I first checked its permissions using:
+
+```bash
+ls -l
+```
+
+The output showed:
+
+```text
+-rwsr-x---
+```
+
+I noticed the `s` permission, which indicated that the file had the SetUID bit enabled. After researching SetUID, I learned that this means the program runs with the permissions of its owner instead of the user executing it. Since the file was owned by `bandit20`, the program could execute commands with `bandit20`'s permissions.
+
+I then checked what type of file it was using:
+
+```bash
+file bandit20-do
+```
+
+The output showed that it was an ELF executable. I initially tried reading it using `cat`, but the output was unreadable because it was a compiled binary rather than a normal text file.
+
+To understand what the program did, I used:
+
+```bash
+strings -n 8 bandit20-do
+```
+
+This revealed a message explaining that the program could run commands as another user:
+
+```text
+Run a command as another user.
+Example: %s whoami
+```
+
+I tested this by running:
+
+```bash
+./bandit20-do whoami
+```
+
+The output confirmed that the command was being executed as `bandit20`.
+
+Since the program could execute commands with `bandit20`'s permissions, I used it to read the password file for the next level:
+
+```bash
+./bandit20-do cat /etc/bandit_pass/bandit20
+```
+
+The command returned the password for Level 20.
+
+This level taught me how SetUID binaries work and how programs with elevated permissions can perform actions that the current user cant.
+
+
+
+
+
+
+
 
 
