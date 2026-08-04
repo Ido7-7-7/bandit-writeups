@@ -319,6 +319,65 @@ The command returned the password for Level 20.
 This level taught me how SetUID binaries work and how programs with elevated permissions can perform actions that the current user cant.
 
 
+## Level 20 → Level 21
+
+For this level, the challenge required using a SetUID binary in the home directory that connects to a specified port on localhost. The program reads a line of text from the connection and compares it with the password from the previous level. If the password is correct, it sends back the password for the next level.
+
+Before starting, I researched the commands suggested in the level description to understand which tools could be useful. After finding the `suconnect` executable in the home directory, I inspected it using:
+
+```bash
+file suconnect
+```
+
+This showed that it was an ELF executable. I then used:
+
+```bash
+strings suconnect
+```
+
+to extract human readable text from the binary. This revealed information such as error messages and usage instructions, which helped me understand how the program works.
+
+To get a better and clearer explanation of how to use the program, I ran it without any arguments:
+
+```bash
+./suconnect
+```
+
+This displayed the usage information:
+
+```text
+Usage: ./suconnect <portnumber>
+This program will connect to the given port on localhost using TCP. If it receives the correct password from the other side, the next password is transmitted back.
+```
+
+From this, I understood that I needed to create a TCP connection where `suconnect` could connect and receive the current level's password.
+
+After some troubleshooting and researching, I realized that I needed to create a listener using `netcat`. I opened another terminal, logged into Bandit Level 20, and started a listener:
+
+```bash
+nc -l localhost 4444
+```
+
+Then, from the second terminal, I connected the SetUID program to the same port:
+
+```bash
+./suconnect 4444
+```
+
+At first, I was confused because typing into the `suconnect` terminal did not produce any output, even when testing with random text. After closing the listener, I received an error message stating that the password did not match. This helped me realize that the connection was working, but I was sending the password from the wrong side.
+
+I then sent the Level 20 password through the `netcat` listener, and the program responded with:
+
+```text
+Read: <current password>
+Password matches, sending next password
+```
+
+The password for the next level was then transmitted through the connection.
+
+This level helped me understand how programs communicate through TCP connections, how SetUID binaries can interact with other processes, and the difference between a program connecting to a service and a listener waiting for a connection.
+
+
 
 
 
