@@ -421,7 +421,7 @@ The script contained:
 ```bash
 #!/bin/bash
 chmod 644 /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
-cat /etc/bandit_pass/bandit22 > /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+cat /etc/bandit_pass/bandit22 > /tmp/<file>
 ```
 
 From this, I understood that the script was reading the password for `bandit22` and writing it into a temporary file.
@@ -429,7 +429,7 @@ From this, I understood that the script was reading the password for `bandit22` 
 I then read the generated file:
 
 ```bash
-cat /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+cat /tmp/<file>
 ```
 
 This revealed the password for the next level.
@@ -508,22 +508,19 @@ To calculate the filename created by the cron job, I ran the command from the sc
 echo I am user bandit23 | md5sum | cut -d ' ' -f 1
 ```
 
-This returned the hash:
+This returned the hash
 
-```text
-8ca319486bfbbc3663ea0fbe81326349
-```
 
 The script would therefore store the password in:
 
 ```bash
-/tmp/8ca319486bfbbc3663ea0fbe81326349
+/tmp/<hash>
 ```
 
 I then read the file:
 
 ```bash
-cat /tmp/8ca319486bfbbc3663ea0fbe81326349
+cat /tmp/<hash>
 ```
 
 This revealed the password for the next level.
