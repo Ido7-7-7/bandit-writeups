@@ -379,6 +379,64 @@ This level helped me understand how programs communicate through TCP connections
 
 
 
+## Level 21 → Level 22
+
+For this level, the challenge required investigating a program that was running automatically through `cron`, the Linux time based job scheduler. The goal was to find the cron configuration and understand what command was being executed.
+
+First, I navigated to the cron configuration directory:
+
+```bash
+cd /etc/cron.d
+```
+
+ And I listed the available cron jobs:
+
+```bash
+ls
+```
+
+I first tried using `crontab` on the files, but I received permission errors. Instead, I inspected the files directly and found one that looked relevant:
+
+```bash
+cat cronjob_bandit22
+```
+
+The output showed:
+
+```text
+@reboot bandit22 /usr/bin/cronjob_bandit22.sh &> /dev/null
+* * * * * bandit22 /usr/bin/cronjob_bandit22.sh &> /dev/null
+```
+
+This showed that a script called `cronjob_bandit22.sh` was being executed automatically as the user `bandit22`.
+
+I then inspected the script:
+
+```bash
+cat /usr/bin/cronjob_bandit22.sh
+```
+
+The script contained:
+
+```bash
+#!/bin/bash
+chmod 644 /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+cat /etc/bandit_pass/bandit22 > /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+```
+
+From this, I understood that the script was reading the password for `bandit22` and writing it into a temporary file.
+
+I then read the generated file:
+
+```bash
+cat /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+```
+
+This revealed the password for the next level.
+
+This level helped me understand how cron jobs work in Linux, how scheduled tasks can execute scripts automatically, and how inspecting automated processes can reveal useful information about system behavior.
+
+
 
 
 
