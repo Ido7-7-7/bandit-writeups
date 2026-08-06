@@ -438,6 +438,100 @@ This level helped me understand how cron jobs work in Linux, how scheduled tasks
 
 
 
+## Level 22 → Level 23
+
+For this level, the challenge required investigating another cron job running automatically. The goal was to understand the script being executed and find where it stored the password.
+
+I first checked the cron directory:
+
+```bash
+cd /etc/cron.d
+```
+
+After listing the files, I found a relevant cron job:
+
+```bash
+ls
+```
+
+I inspected the file I found:
+
+```bash
+cat cronjob_bandit23
+```
+
+The output showed:
+
+```text
+@reboot bandit23 /usr/bin/cronjob_bandit23.sh &> /dev/null
+* * * * * bandit23 /usr/bin/cronjob_bandit23.sh &> /dev/null
+```
+
+This showed that the script was being executed automatically as the user `bandit23`.
+
+I then inspected the script:
+
+```bash
+cat /usr/bin/cronjob_bandit23.sh
+```
+
+The script contained:
+
+```bash
+#!/bin/bash
+
+myname=$(whoami)
+mytarget=$(echo I am user $myname | md5sum | cut -d ' ' -f 1)
+
+echo "Copying passwordfile /etc/bandit_pass/$myname to /tmp/$mytarget"
+
+cat /etc/bandit_pass/$myname > /tmp/$mytarget
+```
+
+At first, I thought I needed to modify or complete something in the script. To test how it worked, I manually executed it:
+
+```bash
+bash /usr/bin/cronjob_bandit23.sh
+```
+
+The script ran successfully, but it created a file containing the password for `bandit22` instead of `bandit23`. After reviewing the script again, I realized this happened because the script used:
+
+```bash
+myname=$(whoami)
+```
+
+Since I was logged in as `bandit22`, `whoami` was `bandit22`. However, the actual cron job runs the script as `bandit23`, meaning the generated filename and password location would be different.
+
+To calculate the filename created by the cron job, I ran the command from the script and replaced the username with `bandit23`:
+
+```bash
+echo I am user bandit23 | md5sum | cut -d ' ' -f 1
+```
+
+This returned the hash:
+
+```text
+8ca319486bfbbc3663ea0fbe81326349
+```
+
+The script would therefore store the password in:
+
+```bash
+/tmp/8ca319486bfbbc3663ea0fbe81326349
+```
+
+I then read the file:
+
+```bash
+cat /tmp/8ca319486bfbbc3663ea0fbe81326349
+```
+
+This revealed the password for the next level.
+
+This level helped me understand how cron jobs run with the permissions of their assigned user, how scripts can behave differently depending on the current user, and how to analyze scripts to predict their output.
+
+
+
 
 
 
