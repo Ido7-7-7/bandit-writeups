@@ -653,6 +653,56 @@ This level helped me understand how cron jobs can execute scripts, how Linux dir
 
 
 
+## Level 24 → Level 25
+
+For this level, the challenge required communicating with the daemon running on port `30002`. The service required two pieces of information: the current level's password and a secret 4 digit PIN code. Since there wasnt a way to retrieve the PIN directly, the solution was to brute-force all possible combinations from `0000` to `9999`.
+
+Instead of manually sending thousands of attempts, I decided to create a script to automate the process.
+
+I created a new script:
+
+```bash
+touch 1.sh
+nano 1.sh
+```
+
+The script contained:
+
+```bash
+#!/bin/bash
+
+password="<current-levels-pass>"
+
+for pin in {0000..9999}; do
+    echo "$password $pin"
+done | nc localhost 30002
+```
+The | operator takes the output from the loop and sends it as input to nc, allowing all generated password/PIN combinations to be sent directly to the daemon.
+
+The script loops through every possible 4 digit PIN combination and combines it with the current level's password. The output is then piped into `netcat`, which sends each attempt to the daemon running on port `30002`.
+
+I then gave the script executable permissions:
+
+```bash
+chmod +x /tmp/1.sh
+```
+
+And ran it:
+
+```bash
+bash /tmp/1.sh
+```
+
+The script automatically sent all 10,000 possible PIN combinations to the daemon. When the correct PIN was sent, the daemon returned the password for the next level.
+
+This level helped me understand the usefulness of scripting for automation, how pipes can connect the output of one command to another program, and how brute-force techniques can be automated when the search space is small enough. 9/10 level.
+
+
+
+
+
+
+
 
 
 
