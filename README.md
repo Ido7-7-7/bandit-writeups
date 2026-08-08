@@ -248,7 +248,7 @@ ssh bandit18@bandit.labs.overthewire.org -p 2220 "ls"
 This displayed the contents of the home directory and showed that a `readme` file existed. I then used:
 
 ```bash
-ssh bandit18@bandit.labs.overthewire.org -p 2220 "cat readme"
+ssh bandit18@bandit.labs.overthewire.org -p 2220 "cat /etc/bandit_pass/bandit19"
 ```
 
 The command displayed the password for the next level, allowing me to continue to Level 19.
