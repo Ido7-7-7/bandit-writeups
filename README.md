@@ -145,7 +145,7 @@ ssh -i /home/kali/sshkey.private -p 2220 bandit14@bandit.labs.overthewire.org
 i was able to log in as bandit14.
 
 
-## level 14 -> level 15
+## level 14 → level 15
 For Bandit Level 14, the challenge required sending the current level's password to a service running on localhost port 30000. I first spent some time investigating an SSH public key I came across, but later realized it was only related to SSH authentication and was not part of the solution. After understanding that localhost referred to the Bandit server itself, I used `netcat` to connect to port 30000.
 
 The next step was finding the current level's password, which was stored in `/etc/bandit_pass/bandit14`. I first tried accessing the file while still logged in as bandit13, because the previous level's description pointed me toward that location, but I received a permission denied error. I realized that only bandit14 had permission to read the file, so I used the SSH key from the previous level to log in as bandit14 and retrieve the password.
@@ -165,7 +165,7 @@ openssl s_client -quiet -connect localhost:30001
 ```
 
 
-## level 16 -> level 17
+## level 16 → level 17
 
 For this level, the challenge required finding the correct port between `31000` and `32000` that was running an SSL/TLS service and submitting the current level's password to it. Before starting, I researched the suggested commands again to refresh my understanding of how they worked.
 
@@ -698,6 +698,108 @@ The script automatically sent all 10,000 possible PIN combinations to the daemon
 This level helped me understand the usefulness of scripting for automation, how pipes can connect the output of one command to another program, and how brute-force techniques can be automated when the search space is small enough. 9/10 level.
 
 
+
+
+## Level 25 → Level 26
+
+For this level, the challenge required figuring out why logging into `bandit26` immediately disconnected me and finding a way to escape the restricted shell.
+
+For this level they gave me an ssh private key for bandit26, so I first copied it to my local machine and tried using it to connect to `bandit26`:
+
+```bash
+ssh -i sshkey.private -p 2220 bandit26@bandit.labs.overthewire.org
+```
+
+The authentication worked, but I was immediately disconnected. I also tried connecting with the verbose flag:
+
+```bash
+ssh -vvv -i sshkey.private -p 2220 bandit26@bandit.labs.overthewire.org
+```
+
+The output confirmed that authentication was successful, so I knew the private key was not the problem. Something else was causing the connection to close.
+
+I also tried using SSH forced commands, but that did not work either. After some research, I checked the entry for `bandit26` in `/etc/passwd`:
+
+```bash
+cat /etc/passwd
+```
+
+I found:
+
+```text
+bandit26:x:11026:11026:bandit level 26:/home/bandit26:/usr/bin/showtext
+```
+
+This showed that the login shell for `bandit26` was not `/bin/bash`, but `/usr/bin/showtext`.
+
+I then inspected the file:
+
+```bash
+cat /usr/bin/showtext
+```
+
+It contained:
+
+```bash
+#!/bin/sh
+
+export TERM=linux
+
+exec more ~/text.txt
+exit 0
+```
+
+This explained why I was being disconnected. Instead of starting a normal shell, the SSH connection was executing `showtext`, which launched `more` to display the `text.txt` file.
+
+I then researched how `more` behaves when there is not enough space to display the entire file. I found that if the terminal window is small enough, `more` pauses instead of immediately finishing. This gave me an interactive `more` session that I could work with and control.
+
+I reduced the size of my terminal window and connected to `bandit26` again. This time, instead of being immediately disconnected, I was left inside `more`.
+
+From there, I researched ways to escape from `more` and found that `more` can be used to launch `vi`. I opened `vi` and changed its shell setting:
+
+```vim
+:set shell=/bin/bash
+```
+
+I then started the shell from `vi`:
+
+```vim
+:shell
+```
+
+This gave me access to a Bash shell as `bandit26`.
+
+Finally, I read the password for the current level:
+
+```bash
+cat /etc/bandit_pass/bandit26
+```
+
+This revealed the password needed for level 26.
+
+This level was probably one of the more frustrating ones for me because I initially focused on the SSH authentication instead of looking at what happened after authentication. It taught me how to investigate a user's configured shell, how programs like `more` can behave differently depending on terminal size, and how one interactive program can sometimes be used to reach another shell. messy level overall.
+
+
+
+## Level 26 → Level 27
+
+For this level, the goal was to use the SetUID binary in the home directory to access the password for `bandit27`.
+
+After getting the shell from the previous level, I listed the files in the home directory:
+
+```bash
+ls
+```
+
+I found the `bandit27-do` executable. Because it was a SetUID binary owned by `bandit27`, I understood that commands executed through it would run with `bandit27`'s permissions.
+
+I used it to read the password file:
+
+```bash
+./bandit27-do cat /etc/bandit_pass/bandit27
+```
+
+This revealed the password for Level 27.
 
 
 
