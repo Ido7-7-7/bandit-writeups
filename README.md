@@ -996,4 +996,63 @@ This revealed the password for Level 30.
 This level taught me how Git branches work and how different branches can contain different versions of the same files. It also showed me that when investigating a Git repository, and I shouldn't only look at the current branch. Cool level.
 
 
+## Level 30 → Level 31
 
+For this level, the challenge was again based on investigating a Git repository. I started by cloning the repository to my local machine:
+
+```bash
+git clone ssh://bandit30-git@bandit.labs.overthewire.org:2220/home/bandit30-git/repo
+```
+
+Inside the repository, there was only one file. When I read it, it contained:
+
+```text
+just an empty file... muahaha
+```
+
+I then tried the two techniques I had used in the previous levels. I checked the branches:
+
+```bash
+git branch
+```
+
+and the commit history:
+
+```bash
+git log
+```
+
+Neither of these gave me anything useful.
+
+I started researching other Git commands that could be useful for investigating an already cloned repository. I tried a few commands, including:
+
+```bash
+git reflog
+git stash list
+git status -u
+```
+
+but none of them revealed anything useful.
+
+While researching other things I could check in the repository, I was lucky and quickly came across Git tags. I learned that tags can be used to point to a specific commit, so I figured it was worth checking if the repository had any.
+I checked for any tags using:
+
+```bash
+git tag
+```
+
+This revealed a tag called:
+
+```text
+secret
+```
+
+I then inspected the tag:
+
+```bash
+git show secret
+```
+
+The output revealed the password for Level 31.
+
+This level taught me that when investigating a Git repository, there can be useful information in places other than the files or normal commit history. In this case, the password was hidden behind a Git tag. Nice.
