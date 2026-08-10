@@ -781,6 +781,8 @@ This level was probably one of the more frustrating ones for me because I initia
 
 
 
+
+
 ## Level 26 → Level 27
 
 For this level, the goal was to use the SetUID binary in the home directory to access the password for `bandit27`.
@@ -804,6 +806,48 @@ This revealed the password for Level 27.
 
 
 
+
+## Level 27 → Level 28
+
+For this level, the challenge required cloning a Git repository from the OverTheWire server to my own machine and finding the password for the next level.
+
+I first read through the recommended material to understand what Git was and how `git clone` worked. The instructions also made it clear that I needed to clone the repository from my local machine rather than from the OverTheWire server.
+
+I used:
+
+```bash
+git clone ssh://bandit27-git@bandit.labs.overthewire.org:2220/home/bandit27-git/repo
+```
+
+I had to do a little research to figure out where to specify the SSH port. I also learned that the port could be included directly in the SSH URL after the hostname:
+
+```text
+:2220
+```
+
+After running the command, Git cloned the repository into a new `repo` directory on my local machine.
+
+I entered the repository:
+
+```bash
+cd repo
+```
+
+and listed its contents:
+
+```bash
+ls
+```
+
+I found a `README` file, so I read it:
+
+```bash
+cat README
+```
+
+This revealed the password for level 28.
+
+This level helped me understand the basics of cloning Git repositories over SSH and how Git can be used to retrieve files from a remote repository. Overall cool level.
 
 
 
