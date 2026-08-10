@@ -919,4 +919,81 @@ This level taught me that deleting or changing information in a Git repository d
 
 
 
+## Level 29 → Level 30
+
+For this level, the challenge was similar to the previous two levels. I had to clone the Git repository to my local machine and find the password for the next level.
+
+I cloned the repository using:
+
+```bash
+git clone ssh://bandit29-git@bandit.labs.overthewire.org:2220/home/bandit29-git/repo
+```
+
+After entering the repository, I found a `README.md` file and read it:
+
+```bash
+cat README.md
+```
+
+It contained:
+
+```text
+# Bandit Notes
+Some notes for bandit30 of bandit.
+
+## credentials
+
+- username: bandit30
+- password: <no passwords in production!>
+```
+
+The password for the next level wasn't in the README, so I knew I needed to investigate what else I could find in the repository.
+
+After researching what I could do with a cloned Git repository, I came across Git branches. I learned that branches are different versions of a repository that can be used for things like developing and testing changes.
+
+I checked which branches existed using:
+
+```bash
+git branch
+```
+
+This showed:
+
+```text
+  dev
+  master
+* sploits-dev
+```
+
+The `*` showed that I was currently on the `sploits-dev` branch.
+
+I switched to the `master` branch and checked the README, but it was the same as the current branch. I then switched to the `dev` branch:
+
+```bash
+git switch dev
+```
+
+After checking the README again:
+
+```bash
+cat README.md
+```
+
+I found:
+
+```text
+# Bandit Notes
+Some notes for bandit30 of bandit.
+
+## credentials
+
+- username: bandit30
+- password: <THE PASSWORD!>
+```
+
+This revealed the password for Level 30.
+
+This level taught me how Git branches work and how different branches can contain different versions of the same files. It also showed me that when investigating a Git repository, and I shouldn't only look at the current branch. Cool level.
+
+
 
