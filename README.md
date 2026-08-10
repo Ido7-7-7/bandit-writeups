@@ -996,6 +996,8 @@ This revealed the password for Level 30.
 This level taught me how Git branches work and how different branches can contain different versions of the same files. It also showed me that when investigating a Git repository, and I shouldn't only look at the current branch. Cool level.
 
 
+
+
 ## Level 30 → Level 31
 
 For this level, the challenge was again based on investigating a Git repository. I started by cloning the repository to my local machine:
@@ -1056,3 +1058,99 @@ git show secret
 The output revealed the password for Level 31.
 
 This level taught me that when investigating a Git repository, there can be useful information in places other than the files or normal commit history. In this case, the password was hidden behind a Git tag. Nice.
+
+
+
+## Level 31 → Level 32
+
+For this level, the challenge was again based on a Git repository. I started by cloning the repository to my local machine:
+
+```bash
+git clone ssh://bandit31-git@bandit.labs.overthewire.org:2220/home/bandit31-git/repo
+```
+
+After entering the repository, I found a `README.md` file containing instructions:
+
+```bash
+cat README.md
+```
+
+The contents:
+
+```text
+This time your task is to push a file to the remote repository.
+
+Details:
+    File name: key.txt
+    Content: 'May I come in?'
+    Branch: master
+```
+
+From this, I understood that I needed to create a file called `key.txt`, put `May I come in?` inside it, and push it to the `master` branch.
+
+I created the file and added the required content:
+
+```bash
+touch key.txt
+nano key.txt
+```
+
+I then researched how to push a file to a remote git repository and learned that I first needed to add and commit the file.
+
+I started by adding it:
+
+```bash
+git add key.txt
+```
+
+However, Git rejected it, and gave me a hint to use `-f` if I "really wanted to add the file". So I tried:
+
+```bash
+git add -f key.txt
+```
+
+This time it worked.
+
+I then tried to create a commit:
+
+```bash
+git commit -m "need to push"
+```
+
+but Git gave me an error saying that it didn't know who I was:
+
+```text
+Author identity unknown
+
+Please tell me who you are.
+```
+
+After researching the error, I learned that Git needs a username and email attached to commits. Since I was using a fresh Kali installation, I hadn't configured these yet.
+
+I set them using these two commands:
+
+```bash
+git config --global user.email "emailsmtsmt@example.com"
+git config --global user.name "A_name"
+```
+
+I then created the commit:
+
+```bash
+git commit -m "pushing file"
+```
+
+Finally, I pushed the commit to the `master` branch:
+
+```bash
+git push origin master
+```
+
+The remote server received and validated the file, and then revealed the password for the next level.
+
+```text
+Well done! Here is the password for the next level:
+<THE PASSWORD!>
+```
+
+This level taught me the basic workflow of adding, committing, and pushing files with Git. It also helped me understand Git configuration. Interesting level.
