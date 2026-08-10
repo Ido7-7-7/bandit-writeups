@@ -852,6 +852,70 @@ This level helped me understand the basics of cloning Git repositories over SSH 
 
 
 
+## Level 28 → Level 29
+
+For this level, the challenge was similar to the previous one. I had to clone another Git repository from the OverTheWire server to my local machine and find the password for the next level.
+
+I cloned the repository using:
+
+```bash
+git clone ssh://bandit28-git@bandit.labs.overthewire.org:2220/home/bandit28-git/repo
+```
+
+After entering the repository, I found a `README.md` file and read it:
+
+```bash
+cat README.md
+```
+
+It contained:
+
+```text
+# Bandit Notes
+Some notes for level29 of bandit.
+
+## credentials
+
+- username: bandit29
+- password: xxxxxxxxxx
+```
+
+The password was hidden, so I started researching what I could do with an already cloned Git repository. I learned that Git keeps a history of previous commits, including changes made to files. So i figured i should use that to my advantage.
+
+I first checked the commit history:
+
+```bash
+git log
+```
+
+This showed three commits:
+
+```text
+fix info leak
+add missing data
+initial commit of README.md
+```
+
+The commit message `fix info leak` stood out to me, so I decided to investigate the changes made in those commits.
+
+I used:
+
+```bash
+git log -p
+```
+
+This displayed the actual changes made in each commit. The important part was this:
+
+```text
+- password: <the password>
++ password: xxxxxxxxxx
+```
+
+This revealed the password for Level 29.
+
+This level taught me that deleting or changing information in a Git repository does not necessarily remove it from the repository's history. Even though the password was no longer visible in the current version of the README, it was still present in an earlier commit.
+
+
 
 
 
