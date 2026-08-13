@@ -1159,7 +1159,7 @@ This level taught me the basic workflow of adding, committing, and pushing files
 
 
 
-# Level 32 → Level 33
+## Level 32 → Level 33
 
 For this level, the first thing I noticed after logging in was:
 
@@ -1219,7 +1219,7 @@ This was probably one of the more interesting levels for me because I had to act
 
 
 
-##Finally
+## Finally
 
 Currently, this is the last level of Bandit. I hope these write-ups helped you or gave you some insight into how I personally solved the challenges.
 
