@@ -1154,3 +1154,73 @@ Well done! Here is the password for the next level:
 ```
 
 This level taught me the basic workflow of adding, committing, and pushing files with Git. It also helped me understand Git configuration. Interesting level.
+
+
+
+
+
+# Level 32 → Level 33
+
+For this level, the first thing I noticed after logging in was:
+
+```text
+WELCOME TO THE UPPERCASE SHELL
+```
+
+When I tried running normal commands, they were all rejected with a `sh: 1: LS: Permission denied` error. For example, trying:
+
+```bash
+ls
+```
+
+resulted in:
+
+```text
+sh: 1: LS: Permission denied
+```
+
+I started messing around with different inputs to see what the shell was actually doing. I tried things like quotes, backticks, ;, and a few other shell characters. Some of them gave me different errors instead of just Permission denied, which made me realize that my input was being passed to another shell and interpreted as shell syntax.
+
+For example:
+
+```bash
+"ls
+```
+
+returned:
+
+```text
+sh: 2: Syntax error: Unterminated quoted string
+```
+
+and:
+
+```bash
+`ls
+```
+
+with a backquote substitution produced:
+
+```text
+sh: 2: Syntax error: EOF in backquote substitution
+```
+
+I kept trying different shell syntax and doing some research on how sh handles commands. Eventually I understood that the first word I entered was being treated as the command to run, but the uppercase shell was changing normal commands to uppercase before passing them to sh.
+
+When researching what else I could try, I came across shell parameters such as $0, $1, $2, $@, and $_. I learned that $0 represents the name or path of the currently running shell or script.
+
+This gave me the idea to try $0 because the whole point of this shell is to turn every command I type into uppercase. Since normal commands like ls were being changed to uppercase, I was getting Permission denied because LS isn't the same executable as ls.
+
+So when trying $0, the UPPERCASE shell doesn't change it because there are no letters to uppercase, so sh receives $0, expands it to the name of the current shell (sh), and executes that shell, giving me a normal shell.
+
+Once I had a normal shell again, I could use normal Linux commands. I did `whoami` saw that I'm bandit 33 and then I proceeded with doing `cat /etc/bandit_pass/bandit33` to get the password for level 33.
+
+This was probably one of the more interesting levels for me because I had to actually experiment and mess around with the shell instead of just finding a file or running a command. It also helped me understand how shells interpret input and taught me more about things like shell parameters and command substitution. Very hard level overall.
+
+
+
+##Finally
+
+Currently, this is the last level of Bandit. I hope these write-ups helped you or gave you some insight into how I personally solved the challenges.
+
+I had a lot of fun solving these levels. Some were frustrating, some took a lot of trial and error, but they all helped me get more comfortable with Linux and sharpen my command line skills. 
