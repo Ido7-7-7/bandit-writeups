@@ -1219,7 +1219,7 @@ This was probably one of the more interesting levels for me because I had to act
 
 
 
-## Finally
+## Final Thoughts 
 
 Currently, this is the last level of Bandit. I hope these write-ups helped you or gave you some insight into how I personally solved the challenges.
 
